@@ -1,10 +1,10 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #       Copyright (C) 2010, Joel B. Mohler <joel@kiwistrawberry.us>
 #
 #  Distributed under the terms of the GNU General Public License (GPL)
 #                  http://www.gnu.org/licenses/
 ##############################################################################
-# -*- coding: utf-8 -*-
 
 import datetime
 import re
@@ -13,26 +13,26 @@ def default_match(t,item):
     return t.lower()[:len(item)] == item.lower()
 
 def fuzzy_match(target,item,match_fucn=None):
-	"""
-	target:  list of possible matches
-	item:  item to find in the list
-	match_fucn:  callable function taking 2 parameters (first from the target list, second is item) and returning a boolean
-		if match_fucn is None then it will default initial lower-case matching of strings
-	"""
+    """
+    :param target:  list of possible matches
+    :param item:  item to find in the list
+    :param match_fucn:  callable function taking 2 parameters (first from the target list, second is item) and returning a boolean
+        if match_fucn is None then it will default initial lower-case matching of strings
+    """
 
-	if match_fucn is None:
-		def default_match(t,item):
-			return t.lower()[:len(item)] == item.lower()
+    if match_fucn is None:
+        def default_match(t,item):
+            return t.lower()[:len(item)] == item.lower()
 
-		match_fucn = default_match
+        match_fucn = default_match
 
-	candidates = [t for t in target if match_fucn(t,item)]
-	if len(candidates) == 1:
-		return candidates[0]
-	elif len(candidates) == 0:
-		return None
-	else:
-		raise ValueError("ambigious match")
+    candidates = [t for t in target if match_fucn(t,item)]
+    if len(candidates) == 1:
+        return candidates[0]
+    elif len(candidates) == 0:
+        return None
+    else:
+        raise ValueError("ambigious match")
 
 def str_to_month(s):
     return fuzzy_match(["january","february","march","april","may","june","july","august","september","october","november","december"], s)
@@ -81,3 +81,13 @@ def str_to_date(s):
         day = datetime.date.today().day
     return datetime.date(year,month,day)
 
+def sanitized_date(d):
+    """
+    This function takes a datetime.date, None, or something else.
+    
+    For some other type it passes it on to str_to_date.
+    """
+    if d is None or isinstance(d,datetime.date):
+        return d
+    else:
+        return str_to_date(d)
