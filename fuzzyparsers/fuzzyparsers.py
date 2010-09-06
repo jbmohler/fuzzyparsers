@@ -5,6 +5,9 @@
 #  Distributed under the terms of the GNU General Public License (GPL)
 #                  http://www.gnu.org/licenses/
 ##############################################################################
+"""
+Date and string matching functions.
+"""
 
 import datetime
 import re
@@ -14,10 +17,28 @@ def default_match(t,item):
 
 def fuzzy_match(target,item,match_fucn=None):
     """
+    This function matches an item to a target list.  It is expected that the 'item' comes from user input and 
+    we want to accept a 'close-enough' match to the target list and validate that there is a unique close-enough 
+    match.
+    
     :param target:  list of possible matches
     :param item:  item to find in the list
     :param match_fucn:  callable function taking 2 parameters (first from the target list, second is item) and returning a boolean
         if match_fucn is None then it will default initial lower-case matching of strings
+
+    The default approach to matching is testing against case-insensitive prefixes from the target strings. 
+    This is illustrated in the examples below.
+
+    Examples:
+    >>> fuzzy_match(['aab','bba','abc'],'aa')
+    'aab'
+    >>> try:
+    ...     fuzzy_match(['aab','bba','abc'],'a')  # two strings starting with 'a'.
+    ... except Exception, e:
+    ...     repr(e)
+    "ValueError('ambigious match',)"
+    >>> fuzzy_match(['aab','bba','abc'],'b')
+    'bba'
     """
 
     if match_fucn is None:
@@ -35,7 +56,15 @@ def fuzzy_match(target,item,match_fucn=None):
         raise ValueError("ambigious match")
 
 def str_to_month(s):
-    return fuzzy_match(["january","february","march","april","may","june","july","august","september","october","november","december"], s)
+    """
+    >>> str_to_month("ja")
+    1
+    >>> str_to_month("mar")
+    3
+    """
+    months = ["january","february","march","april","may","june","july","august","september","october","november","december"]
+    indexed = [(months[i], i)for i in range(len(months))]
+    return fuzzy_match(indexed, s, match_fucn=lambda x, y: default_match(x[0], y))[1]+1
 
 def str_to_date_int(s):
     m = re.match("([a-zA-Z]*) ([0-9]+)(,|) ([0-9]+)",s)
@@ -86,8 +115,22 @@ def sanitized_date(d):
     This function takes a datetime.date, None, or something else.
     
     For some other type it passes it on to str_to_date.
+    
+    Examples:
+    >>> sanitized_date('jan 9 1979') # my birthday
+    datetime.date(1979, 1, 9)
+    >>> sanitized_date('2010-06-17') # my youngest son's birthday
+    datetime.date(2010, 6, 17)
+    >>> sanitized_date('f 29, 2012')  # february is the unique month starting with 'f'
+    datetime.date(2012, 2, 29)
+    >>> sanitized_date('+35')-datetime.date.today()
+    datetime.timedelta(35)
     """
     if d is None or isinstance(d,datetime.date):
         return d
     else:
         return str_to_date(d)
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
