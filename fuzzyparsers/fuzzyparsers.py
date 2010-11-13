@@ -67,6 +67,18 @@ def str_to_month(s):
     return fuzzy_match(indexed, s, match_fucn=lambda x, y: default_match(x[0], y))[1]+1
 
 def str_to_date_int(s):
+    """
+    :param s:  an input string to parse
+    :return: a 3-tuple of numeric 4 digit year, month index 1-12 and day 1-31
+
+    This function probably has a twisted american bias.  I say "twisted" because I tend to prefer yyyy-mm-dd for my own 
+    personal date entry.  However, the applications I write are for US citizens.
+    
+    >>> str_to_date_int("feb 2 2011")
+    (2011, 2, 2)
+    >>> str_to_date_int("2010.3.11")
+    (2010, 3, 11)
+    """
     m = re.match("([a-zA-Z]*) ([0-9]+)(,|) ([0-9]+)",s)
     if m:
         return int(m.group(4)),str_to_month(m.group(1)),int(m.group(2))
@@ -112,9 +124,10 @@ def str_to_date(s):
 
 def sanitized_date(d):
     """
-    This function takes a datetime.date, None, or something else.
+    :param d: d can be a datetime.date, None or something else.
     
-    For some other type it passes it on to str_to_date.
+    This function only pre-checks the type for a date type or None before passing the 
+    lone parameter on to str_to_date.
     
     Examples:
     >>> sanitized_date('jan 9 1979') # my birthday
@@ -130,7 +143,3 @@ def sanitized_date(d):
         return d
     else:
         return str_to_date(d)
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
