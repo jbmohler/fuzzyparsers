@@ -3,4 +3,6 @@ fuzzyparsers library initialization
 """
 
 from fuzzyparsers import *
-# Nothing going
+
+# backwards compatibility function
+sanitized_date = parse_date

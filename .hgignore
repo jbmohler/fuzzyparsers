@@ -1,4 +1,9 @@
 syntax: glob
 
 re:^build
+re:^dist
+*.egg-info
 *.pyc
+
+*~
+README.html

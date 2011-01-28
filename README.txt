@@ -1,3 +1,6 @@
+Introduction and Examples
+-------------------------
+
 The fuzzyparsers library provides a small collection of functions to sanitize free form user input.  For the 
 moment its chief value is the flexible date parser.
 
@@ -23,10 +26,18 @@ The second parser parses dates in various formats and returns a datetime.date ob
 
 For instance:
 
-    >>> from fuzzyparsers import sanitized_date
-    >>> sanitized_date('jun 17 2010') # my youngest son's birthday
+    >>> from fuzzyparsers import parse_date
+    >>> parse_date('jun 17 2010') # my youngest son's birthday
     datetime.date(2010, 6, 17)
-        
+
+Changelog
+---------
+* 0.7 - overhaul of date parsing api to support relative dates (not necessarily relative to the current date)
+* 0.6.x - initial public release and series of doc/install corrections
+
+Installation
+------------
+
 Fuzzyparsers is written by Joel B. Mohler and distributed under the terms of the GPL v2 (or later).
 
 The doc-tests provide fair code coverage.  Use the following command::

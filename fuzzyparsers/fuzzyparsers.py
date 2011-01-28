@@ -63,83 +63,105 @@ def str_to_month(s):
     3
     """
     months = ["january","february","march","april","may","june","july","august","september","october","november","december"]
-    indexed = [(months[i], i)for i in range(len(months))]
+    indexed = [(months[i], i) for i in range(len(months))]
     return fuzzy_match(indexed, s, match_fucn=lambda x, y: default_match(x[0], y))[1]+1
 
-def str_to_date_int(s):
-    """
-    :param s:  an input string to parse
-    :return: a 3-tuple of numeric 4 digit year, month index 1-12 and day 1-31
+class DateParser:
+    def __init__(self,today=None):
+        if today is None:
+            today = datetime.date.today()
+        self.today=today
 
-    This function probably has a twisted american bias.  I say "twisted" because I tend to prefer yyyy-mm-dd for my own 
-    personal date entry.  However, the applications I write are for US citizens.
-    
-    >>> str_to_date_int("feb 2 2011")
-    (2011, 2, 2)
-    >>> str_to_date_int("2010.3.11")
-    (2010, 3, 11)
-    """
-    m = re.match("([a-zA-Z]*) ([0-9]+)(,|) ([0-9]+)",s)
-    if m:
-        return int(m.group(4)),str_to_month(m.group(1)),int(m.group(2))
-    m = re.match("([a-zA-Z]*) ([0-9]+)",s)
-    if m:
-        return None,str_to_month(m.group(1)),int(m.group(2))
-    # yyyy-mm-dd
-    m = re.match("([0-9]{4})[-./]([0-9]{1,2})[-./]([0-9]{1,2})",s)
-    if m:
-        return int(m.group(1)),int(m.group(2)),int(m.group(3))
-    # mm-dd-yyyy
-    m = re.match("([0-9]{1,2})[-./]([0-9]{1,2})[-./]([0-9]{4})",s)
-    if m:
-        return int(m.group(3)),int(m.group(1)),int(m.group(2))
-    m = re.match("(-|\+)([0-9]+)",s)
-    if m:
-        if m.group(1)=='+':
-            d = datetime.date.today() + datetime.timedelta(int(m.group(2)))
-        elif m.group(1)=='-':
-            d = datetime.date.today() - datetime.timedelta(int(m.group(2)))
-        return d.year,d.month,d.day
-    raise NotImplementedError
-    return None,None,None
+    def str_to_date_int(self,s):
+        """
+        :param s:  an input string to parse
+        :return: a 3-tuple of numeric 4 digit year, month index 1-12 and day 1-31
 
-def str_to_date(s):
-    """
-    Parses input `s` into a date.  The accepted date formats are quite flexible.
-    
-    jan 12, 2003
-    jan 5
-    2004-3-5
-    +34 -- 34 days in the future (relative to todays date)
-    -4 -- 4 days in the past (relative to todays date)
-    """
-    year,month,day = str_to_date_int(s)
-    if year is None:
-        year = datetime.date.today().year
-    if month is None:
-        month = datetime.date.today().month
-    if day is None:
-        day = datetime.date.today().day
-    return datetime.date(year,month,day)
+        This function probably has a twisted american bias.  I say "twisted" because I tend to prefer yyyy-mm-dd for my own 
+        personal date entry.  However, the applications I write are for US citizens.
+        
+        >>> DateParser().str_to_date_int("feb 2 2011")
+        (2011, 2, 2)
+        >>> DateParser().str_to_date_int("2010.3.11")
+        (2010, 3, 11)
+        >>> DateParser().str_to_date_int("total junk")
+        Traceback (most recent call last):
+        ...
+        NotImplementedError: The input date 'total junk' is unrecognized.
+        """
+        m = re.match("([a-zA-Z]*) ([0-9]+)(,|) ([0-9]+)",s)
+        if m:
+            return int(m.group(4)),str_to_month(m.group(1)),int(m.group(2))
+        m = re.match("([a-zA-Z]*) ([0-9]+)",s)
+        if m:
+            return None,str_to_month(m.group(1)),int(m.group(2))
+        # yyyy-mm-dd
+        m = re.match("([0-9]{4})[-./]([0-9]{1,2})[-./]([0-9]{1,2})",s)
+        if m:
+            return int(m.group(1)),int(m.group(2)),int(m.group(3))
+        # mm-dd-yyyy
+        m = re.match("([0-9]{1,2})[-./]([0-9]{1,2})[-./]([0-9]{4})",s)
+        if m:
+            return int(m.group(3)),int(m.group(1)),int(m.group(2))
+        m = re.match("(-|\+)([0-9]+)",s)
+        if m:
+            if m.group(1)=='+':
+                d = self.today + datetime.timedelta(int(m.group(2)))
+            elif m.group(1)=='-':
+                d = self.today - datetime.timedelta(int(m.group(2)))
+            return d.year,d.month,d.day
+        raise NotImplementedError("The input date '%s' is unrecognized." % (s,))
+        return None,None,None
 
-def sanitized_date(d):
+    def str_to_date(self,s):
+        """
+        Parses input `s` into a date.  The accepted date formats are quite flexible.
+        
+        jan 12, 2003
+        jan 5
+        2004-3-5
+        +34 -- 34 days in the future (relative to todays date)
+        -4 -- 4 days in the past (relative to todays date)
+        """
+        year,month,day = self.str_to_date_int(s)
+        if year is None:
+            year = self.today.year
+        if month is None:
+            month = self.today.month
+        if day is None:
+            day = self.today.day
+        return datetime.date(year,month,day)
+
+    def parse_date(self,d):
+        """
+        >>> DateParser(datetime.date(2011,1,1)).parse_date("+10")
+        datetime.date(2011, 1, 11)
+        """
+        if d is None or isinstance(d,datetime.date):
+            return d
+        else:
+            return self.str_to_date(d)
+
+def parse_date(d):
     """
-    :param d: d can be a datetime.date, None or something else.
+    :param d: d can be a datetime.date, None or anything with string semantics.
     
     This function only pre-checks the type for a date type or None before passing the 
     lone parameter on to str_to_date.
     
+    Certain import formats assume a current date to fill in missing pieces of the date 
+    or as a baseline for relative dates.  To provide your own baseline date, use 
+    the DateParser class directly.
+    
     Examples:
-    >>> sanitized_date('jan 9 1979') # my birthday
+    >>> parse_date('jan 9 1979') # my birthday
     datetime.date(1979, 1, 9)
-    >>> sanitized_date('2010-06-17') # my youngest son's birthday
+    >>> parse_date('2010-06-17') # my youngest son's birthday
     datetime.date(2010, 6, 17)
-    >>> sanitized_date('f 29, 2012')  # february is the unique month starting with 'f'
+    >>> parse_date('f 29, 2012')  # february is the unique month starting with 'f'
     datetime.date(2012, 2, 29)
-    >>> sanitized_date('+35')-datetime.date.today()
+    >>> parse_date('+35')-datetime.date.today()
     datetime.timedelta(35)
+    >>> parse_date(None)  # None is simply returned unchanged
     """
-    if d is None or isinstance(d,datetime.date):
-        return d
-    else:
-        return str_to_date(d)
+    return DateParser().parse_date(d)
