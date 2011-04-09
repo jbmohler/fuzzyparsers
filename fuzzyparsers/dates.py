@@ -11,49 +11,7 @@ Date and string matching functions.
 
 import datetime
 import re
-
-def default_match(t,item):
-    return t.lower()[:len(item)] == item.lower()
-
-def fuzzy_match(target,item,match_fucn=None):
-    """
-    This function matches an item to a target list.  It is expected that the 'item' comes from user input and 
-    we want to accept a 'close-enough' match to the target list and validate that there is a unique close-enough 
-    match.
-    
-    :param target:  list of possible matches
-    :param item:  item to find in the list
-    :param match_fucn:  callable function taking 2 parameters (first from the target list, second is item) and returning a boolean
-        if match_fucn is None then it will default initial lower-case matching of strings
-
-    The default approach to matching is testing against case-insensitive prefixes from the target strings. 
-    This is illustrated in the examples below.
-
-    Examples:
-    >>> fuzzy_match(['aab','bba','abc'],'aa')
-    'aab'
-    >>> try:
-    ...     fuzzy_match(['aab','bba','abc'],'a')  # two strings starting with 'a'.
-    ... except Exception, e:
-    ...     repr(e)
-    "ValueError('ambigious match',)"
-    >>> fuzzy_match(['aab','bba','abc'],'b')
-    'bba'
-    """
-
-    if match_fucn is None:
-        def default_match(t,item):
-            return t.lower()[:len(item)] == item.lower()
-
-        match_fucn = default_match
-
-    candidates = [t for t in target if match_fucn(t,item)]
-    if len(candidates) == 1:
-        return candidates[0]
-    elif len(candidates) == 0:
-        return None
-    else:
-        raise ValueError("ambigious match")
+from strings import fuzzy_match, default_match
 
 def str_to_month(s):
     """
@@ -84,6 +42,8 @@ class DateParser:
         (2011, 2, 2)
         >>> DateParser().str_to_date_int("2010.3.11")
         (2010, 3, 11)
+        >>> DateParser().str_to_date_int("12 1 2020")
+        (2020, 12, 1)
         >>> DateParser().str_to_date_int("total junk")
         Traceback (most recent call last):
         ...
@@ -92,17 +52,29 @@ class DateParser:
         m = re.match("([a-zA-Z]*) ([0-9]+)(,|) ([0-9]+)",s)
         if m:
             return int(m.group(4)),str_to_month(m.group(1)),int(m.group(2))
+        # month year
+        m = re.match("([a-zA-Z]*) ([0-9]{4})",s)
+        if m:
+            # this is a little curious, but I think it makes sense to a human
+            # If I enter "March 2011", I think I mean the 1st of march ... maybe
+            return int(m.group(2)),str_to_month(m.group(1)),1
+        # month day
         m = re.match("([a-zA-Z]*) ([0-9]+)",s)
         if m:
             return None,str_to_month(m.group(1)),int(m.group(2))
         # yyyy-mm-dd
-        m = re.match("([0-9]{4})[-./]([0-9]{1,2})[-./]([0-9]{1,2})",s)
+        m = re.match("([0-9]{4})[-./ ]([0-9]{1,2})[-./ ]([0-9]{1,2})",s)
         if m:
             return int(m.group(1)),int(m.group(2)),int(m.group(3))
         # mm-dd-yyyy
-        m = re.match("([0-9]{1,2})[-./]([0-9]{1,2})[-./]([0-9]{4})",s)
+        m = re.match("([0-9]{1,2})[-./ ]([0-9]{1,2})[-./ ]([0-9]{4})",s)
         if m:
             return int(m.group(3)),int(m.group(1)),int(m.group(2))
+        # mm-dd-yy
+        # this is an American bias here, but perhaps we should look at the locale ??
+        m = re.match("([0-9]{1,2})[-./ ]([0-9]{1,2})[-./ ]([0-9]{2})",s)
+        if m:
+            return int(m.group(3))+2000,int(m.group(1)),int(m.group(2))
         m = re.match("(-|\+)([0-9]+)",s)
         if m:
             if m.group(1)=='+':
@@ -111,7 +83,6 @@ class DateParser:
                 d = self.today - datetime.timedelta(int(m.group(2)))
             return d.year,d.month,d.day
         raise NotImplementedError("The input date '%s' is unrecognized." % (s,))
-        return None,None,None
 
     def str_to_date(self,s):
         """
@@ -122,6 +93,8 @@ class DateParser:
         2004-3-5
         +34 -- 34 days in the future (relative to todays date)
         -4 -- 4 days in the past (relative to todays date)
+        >>> DateParser(datetime.date(2011,4,15)).str_to_date("may 1")
+        datetime.date(2011, 5, 1)
         """
         year,month,day = self.str_to_date_int(s)
         if year is None:
@@ -160,8 +133,19 @@ def parse_date(d):
     datetime.date(2010, 6, 17)
     >>> parse_date('f 29, 2012')  # february is the unique month starting with 'f'
     datetime.date(2012, 2, 29)
+    >>> parse_date('mar 2015')  # with no date, but a full month & year, assume the first
+    datetime.date(2015, 3, 1)
     >>> parse_date('+35')-datetime.date.today()
     datetime.timedelta(35)
+    >>> parse_date('-35')-datetime.date.today()
+    datetime.timedelta(-35)
     >>> parse_date(None)  # None is simply returned unchanged
+
+    >>> # We'd expect to be able to parse any locale date
+    >>> x = parse_date( 'jan 13 2012' )
+    >>> x
+    datetime.date(2012, 1, 13)
+    >>> parse_date(x.strftime("%x"))==x
+    True
     """
     return DateParser().parse_date(d)

@@ -7,3 +7,5 @@ re:^dist
 
 *~
 README.html
+.coverage
+cover
