@@ -32,6 +32,8 @@ For instance:
 
 Changelog
 ---------
+* 0.7.2 - added doc-tests and "march 2012" date format; doc-test scripts
+* 0.7.1 - install fixes
 * 0.7 - overhaul of date parsing api to support relative dates (not necessarily relative to the current date)
 * 0.6.x - initial public release and series of doc/install corrections
 

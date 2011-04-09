@@ -7,8 +7,12 @@
 #                  http://www.gnu.org/licenses/
 ##############################################################################
 
-from ez_setup import use_setuptools
-use_setuptools()
+try:
+    from setuptools import setup
+except ImportError:
+    from ez_setup import use_setuptools
+    use_setuptools()
+    from setuptools import setup
 
 from setuptools import setup
 import os
@@ -17,12 +21,11 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(name='fuzzyparsers',
-      version='0.7.1',
+      version='0.7.2',
       description='A collection of free-form input parsers (with special focus on dates)',
       license='GPLv2 or later',
       author='Joel B. Mohler',
       author_email='joel@kiwistrawberry.us',
       long_description=read('README.txt'),
       url='https://bitbucket.org/jbmohler/fuzzyparsers',
-      packages=['fuzzyparsers'],
-     )
+      packages=['fuzzyparsers'])
