@@ -14,7 +14,6 @@ except ImportError:
     use_setuptools()
     from setuptools import setup
 
-from setuptools import setup
 import os
 
 def read(fname):
