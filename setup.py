@@ -20,7 +20,7 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(name='fuzzyparsers',
-      version='0.7.2',
+      version='0.7.2',  # also update in fuzzyparsers/__init__.py
       description='A collection of free-form input parsers (with special focus on dates)',
       license='GPLv2 or later',
       author='Joel B. Mohler',
