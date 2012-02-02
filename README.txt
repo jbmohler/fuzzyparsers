@@ -30,6 +30,16 @@ For instance:
     >>> parse_date('jun 17 2010') # my youngest son's birthday
     datetime.date(2010, 6, 17)
 
+TODO
+----
+
+We'd like to support the following features:
+
+* Parsing time strings like "10 am" and "2 3 pm"
+* A "[0-9]*.[0-9]*" with the first hunk a month and the second hunk a day
+  should return the month/day combination which is nearest.  For example,
+  "12-3" would return december 3 of this year or last year.
+
 Changelog
 ---------
 * 0.7.2 - added doc-tests and "march 2012" date format; doc-test scripts
