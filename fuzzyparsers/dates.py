@@ -11,6 +11,7 @@ Date and string matching functions.
 
 import datetime
 import re
+from locale import nl_langinfo, D_FMT
 from strings import fuzzy_match, default_match
 
 def str_to_month(s):
@@ -49,6 +50,18 @@ class DateParser:
         ...
         NotImplementedError: The input date 'total junk' is unrecognized.
         """
+        # dfmt is a string like "%a %b %e %Y"
+        # %a   locale's abbreviated weekday name (e.g., Sun)
+        # %b   locale's abbreviated month name (e.g., Jan)
+        # %d   day of month (e.g., 01)
+        # %D   date; same as %m/%d/%y
+        # %e   day of month, space padded; same as %_d
+        # %F   full date; same as %Y-%m-%d
+        # %m   month (01..12)
+        # %y   last two digits of year (00..99)
+        # %Y   year
+        dfmt=nl_langinfo(D_FMT)
+
         m = re.match("([a-zA-Z]*) ([0-9]+)(,|) ([0-9]+)",s)
         if m:
             return int(m.group(4)),str_to_month(m.group(1)),int(m.group(2))
@@ -66,15 +79,26 @@ class DateParser:
         m = re.match("([0-9]{4})[-./ ]([0-9]{1,2})[-./ ]([0-9]{1,2})",s)
         if m:
             return int(m.group(1)),int(m.group(2)),int(m.group(3))
-        # mm-dd-yyyy
-        m = re.match("([0-9]{1,2})[-./ ]([0-9]{1,2})[-./ ]([0-9]{4})",s)
-        if m:
+
+        if (dfmt[1] == 'm'): # American formats
+          # mm-dd-yyyy
+          m = re.match("([0-9]{1,2})[-./ ]([0-9]{1,2})[-./ ]([0-9]{4})",s)
+          if m:
             return int(m.group(3)),int(m.group(1)),int(m.group(2))
-        # mm-dd-yy
-        # this is an American bias here, but perhaps we should look at the locale ??
-        m = re.match("([0-9]{1,2})[-./ ]([0-9]{1,2})[-./ ]([0-9]{2})",s)
-        if m:
+          # mm-dd-yy
+          m = re.match("([0-9]{1,2})[-./ ]([0-9]{1,2})[-./ ]([0-9]{2})",s)
+          if m:
             return int(m.group(3))+2000,int(m.group(1)),int(m.group(2))
+        else: # European formats
+          # dd-mm-yyyy
+          m = re.match("([0-9]{1,2})[-./ ]([0-9]{1,2})[-./ ]([0-9]{4})",s)
+          if m:                   
+            return int(m.group(3)),int(m.group(2)),int(m.group(1))
+          # dd-mm-yy
+          m = re.match("([0-9]{1,2})[-./ ]([0-9]{1,2})[-./ ]([0-9]{2})",s)
+          if m:
+            return int(m.group(3))+2000,int(m.group(2)),int(m.group(1))
+         
         m = re.match("(-|\+)([0-9]+)",s)
         if m:
             if m.group(1)=='+':
