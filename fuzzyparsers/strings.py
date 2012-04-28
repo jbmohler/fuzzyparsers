@@ -9,36 +9,34 @@
 Date and string matching functions.
 """
 
-import datetime
-import re
-
 def default_match(t,item):
     return t.lower()[:len(item)] == item.lower()
 
 def fuzzy_match(target,item,match_fucn=None):
     """
-    This function matches an item to a target list.  It is expected that the 'item' comes from user input and 
-    we want to accept a 'close-enough' match to the target list and validate that there is a unique close-enough 
-    match.
+    This function matches an item to a target list.  It is expected that the
+    'item' comes from user input and we want to accept a 'close-enough' match
+    to the target list and validate that there is a unique close-enough match.
     
     If there is no suitable match, None is returned.
     
     :param target:  list of possible matches
     :param item:  item to find in the list
-    :param match_fucn:  callable function taking 2 parameters (first from the target list, second is item) and returning a boolean
-        if match_fucn is None then it will default initial lower-case matching of strings
+    :param match_fucn:  callable function taking 2 parameters (first from the
+        target list, second is item) and returning a boolean if match_fucn is
+        None then it will default initial lower-case matching of strings
 
-    The default approach to matching is testing against case-insensitive prefixes from the target strings. 
-    This is illustrated in the examples below.
+    The default approach to matching is testing against case-insensitive
+    prefixes from the target strings.  This is illustrated in the examples
+    below.
 
     Examples:
     >>> fuzzy_match(['aab','bba','abc'],'aa')
     'aab'
-    >>> try:
-    ...     fuzzy_match(['aab','bba','abc'],'a')  # two strings starting with 'a'.
-    ... except Exception, e:
-    ...     repr(e)
-    "ValueError('ambigious match',)"
+    >>> fuzzy_match(['aab','bba','abc'],'a')  # two strings starting with 'a'.
+    Traceback (most recent call last):
+    ...
+    ValueError: ambiguous match for 'a'
     >>> fuzzy_match(['aab','bba','abc'],'b')
     'bba'
     >>> fuzzy_match(['aab','bba','abc'],'sam')  # no match simply returns None
@@ -56,4 +54,4 @@ def fuzzy_match(target,item,match_fucn=None):
     elif len(candidates) == 0:
         return None
     else:
-        raise ValueError("ambigious match")
+        raise ValueError("ambiguous match for '{0}'".format(item))
