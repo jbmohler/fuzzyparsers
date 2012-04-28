@@ -20,11 +20,17 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(name='fuzzyparsers',
-      version='0.7.2',  # also update in fuzzyparsers/__init__.py
-      description='A collection of free-form input parsers (with special focus on dates)',
-      license='GPLv2 or later',
-      author='Joel B. Mohler',
-      author_email='joel@kiwistrawberry.us',
-      long_description=read('README.txt'),
-      url='https://bitbucket.org/jbmohler/fuzzyparsers',
-      packages=['fuzzyparsers'])
+    version='0.7.3',  # also update in fuzzyparsers/__init__.py
+    description='A collection of free-form input parsers (with special focus on dates)',
+    license='GPLv2 or later',
+    author='Joel B. Mohler',
+    author_email='joel@kiwistrawberry.us',
+    long_description=read('README.txt'),
+    url='https://bitbucket.org/jbmohler/fuzzyparsers',
+    packages=['fuzzyparsers'],
+    classifiers = [
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: GNU General Public License (GPL)",
+        "Programming Language :: Python :: 2",
+        "Operating System :: OS Independent"])
