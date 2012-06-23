@@ -14,5 +14,5 @@ from dates import *
 # backwards compatibility function
 sanitized_date = parse_date
 
-__version_info__ = ['0', '8', '0']
+__version_info__ = ['0', '8', '1', 'pre']
 __version__ = '.'.join(__version_info__)
