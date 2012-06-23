@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 ##############################################################################
-#       Copyright (C) 2010, Joel B. Mohler <joel@kiwistrawberry.us>
+#  Copyright (C) 2010-12, Joel B. Mohler <joel@kiwistrawberry.us>
 #
-#  Distributed under the terms of the GNU General Public License (GPLv2 or later)
-#                  http://www.gnu.org/licenses/
+#  Distributed under the terms of The MIT License
 ##############################################################################
 
 try:
@@ -20,9 +19,9 @@ def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
 setup(name='fuzzyparsers',
-    version='0.7.4.pre',  # also update in fuzzyparsers/__init__.py
+    version='0.8.0',  # also update in fuzzyparsers/__init__.py
     description='A collection of free-form input parsers (with special focus on dates)',
-    license='GPLv2 or later',
+    license='MIT',
     author='Joel B. Mohler',
     author_email='joel@kiwistrawberry.us',
     long_description=read('README.txt'),
@@ -31,6 +30,6 @@ setup(name='fuzzyparsers',
     classifiers = [
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU General Public License (GPL)",
+        "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 2",
         "Operating System :: OS Independent"])

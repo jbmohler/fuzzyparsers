@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#       Copyright (C) 2010, Joel B. Mohler <joel@kiwistrawberry.us>
+#  Copyright (C) 2010-12, Joel B. Mohler <joel@kiwistrawberry.us>
 #
-#  Distributed under the terms of the GNU General Public License (GPLv2 or later)
-#                  http://www.gnu.org/licenses/
+#  Distributed under the terms of the MIT license
 ##############################################################################
 """
 Date and string matching functions.

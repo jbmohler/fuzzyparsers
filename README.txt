@@ -3,7 +3,7 @@ Introduction and Examples
 
 The fuzzyparsers library provides a small collection of functions to sanitize
 free form user input.  For the moment its chief value is the flexible date
-parser.
+parser.  The library strives to be locale smart in parsing dates.
 
 The library has two main parsers.  The first is a prefix parser which compares
 a string to a list of strings and returns the unique element of the list which
@@ -53,6 +53,10 @@ We'd like to support the following features:
 
 Changelog
 ---------
+* 0.8.0 - switch to MIT license because I couldn't figure out why I cared about
+  GPL for this package.
+* 0.7.3 - locale month-day order issues fixed (thanks to Treeve for getting
+  this started.
 * 0.7.2 - added doc-tests and "march 2012" date format; doc-test scripts
 * 0.7.1 - install fixes
 * 0.7 - overhaul of date parsing api to support relative dates (not necessarily
@@ -63,7 +67,7 @@ Installation
 ------------
 
 Fuzzyparsers is written by Joel B. Mohler and distributed under the terms of
-the GPL v2 (or later).
+the MIT license.
 
 Use the following commands to run the extensive doc-tests::
 
