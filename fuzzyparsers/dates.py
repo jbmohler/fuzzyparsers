@@ -11,7 +11,6 @@ Date and string matching functions.
 
 import datetime
 import re
-from locale import nl_langinfo, D_FMT
 from strings import fuzzy_match, default_match
 
 def str_to_month(s):
@@ -25,6 +24,42 @@ def str_to_month(s):
     indexed = [(months[i], i) for i in range(len(months))]
     return fuzzy_match(indexed, s, match_fucn=lambda x, y: default_match(x[0], y))[1]+1
 
+def locale_format():
+    has_locale = False
+    try:
+        from locale import nl_langinfo, D_FMT
+        has_locale = True
+    except ImportError as e:
+        pass
+
+    if has_locale:
+        # dfmt is a string like "%a %b %e %Y"
+        # %a   locale's abbreviated weekday name (e.g., Sun)
+        # %b   locale's abbreviated month name (e.g., Jan)
+        # %d   day of month (e.g., 01)
+        # %D   date; same as %m/%d/%y
+        # %e   day of month, space padded; same as %_d
+        # %F   full date; same as %Y-%m-%d
+        # %m   month (01..12)
+        # %y   last two digits of year (00..99)
+        # %Y   year
+        dfmt = nl_langinfo(D_FMT)
+    else:
+        # nl_langinfo & friends is not available everywhere
+        dfmt = "%m/%d/%Y" # US default
+
+        # this is a hack!
+        d = datetime.datetime(2022, 7, 9)
+        x = d.strftime("%x")
+        dfmt = x \
+                .replace("2022", "%Y") \
+                .replace("22", "%y") \
+                .replace("09", "%d") \
+                .replace("07", "%m") \
+                .replace("9", "%d") \
+                .replace("7", "%m")
+    return dfmt
+
 class DateParser:
     def __init__(self,today=None, dfmt=None):
         if today is None:
@@ -32,17 +67,7 @@ class DateParser:
         self.today=today
 
         if dfmt is None:
-            # dfmt is a string like "%a %b %e %Y"
-            # %a   locale's abbreviated weekday name (e.g., Sun)
-            # %b   locale's abbreviated month name (e.g., Jan)
-            # %d   day of month (e.g., 01)
-            # %D   date; same as %m/%d/%y
-            # %e   day of month, space padded; same as %_d
-            # %F   full date; same as %Y-%m-%d
-            # %m   month (01..12)
-            # %y   last two digits of year (00..99)
-            # %Y   year
-            dfmt=nl_langinfo(D_FMT)
+            dfmt = locale_format()
         self.dfmt = dfmt
 
     def str_to_date_int(self,s):
