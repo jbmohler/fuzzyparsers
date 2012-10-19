@@ -97,6 +97,8 @@ class DateParser:
         (None, 2, 29)
         >>> DateParser().str_to_date_int('feb 27 2015')
         (2015, 2, 27)
+        >>> DateParser().str_to_date_int('feb 27 15')
+        (2015, 2, 27)
         >>> DateParser().str_to_date_int('27 feb 2015')
         (2015, 2, 27)
 
@@ -126,12 +128,18 @@ class DateParser:
         # month day year (alpha month is locale unambiguous)
         m = re.match("([a-zA-Z]+) ([0-9]{1,2})(,|) ([0-9]+)",s)
         if m:
-            return int(m.group(4)),str_to_month(m.group(1)),int(m.group(2))
+            y = int(m.group(4))
+            if y < 100:
+                y += 2000
+            return y,str_to_month(m.group(1)),int(m.group(2))
 
         # day month year (alpha month is locale unambiguous)
         m = re.match("([0-9]+) ([a-zA-Z]+)(,|) ([0-9]+)",s)
         if m:
-            return int(m.group(4)),str_to_month(m.group(2)),int(m.group(1))
+            y = int(m.group(4))
+            if y < 100:
+                y += 2000
+            return y,str_to_month(m.group(2)),int(m.group(1))
 
         # month year
         m = re.match("([a-zA-Z]+) ([0-9]{4})",s)
