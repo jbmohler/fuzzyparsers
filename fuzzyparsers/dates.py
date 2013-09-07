@@ -10,7 +10,7 @@ Date and string matching functions.
 
 import datetime
 import re
-from strings import fuzzy_match, default_match
+from .strings import fuzzy_match, default_match
 
 def str_to_month(s):
     """

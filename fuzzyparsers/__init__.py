@@ -8,8 +8,8 @@
 fuzzyparsers library initialization
 """
 
-from strings import default_match, fuzzy_match
-from dates import *
+from .strings import default_match, fuzzy_match
+from .dates import *
 
 # backwards compatibility function
 sanitized_date = parse_date
