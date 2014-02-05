@@ -9,13 +9,13 @@ The library has two main parsers.  The first is a prefix parser which compares
 a string to a list of strings and returns the unique element of the list which
 matches the prefix.  An exception is thrown if the match is not unique.
 
-    >>> from fuzzyparsers import fuzzy_match
-    >>> fuzzy_match(['aab','bba','abc'],'aa')
-    'aab'
-    >>> fuzzy_match(['aab','bba','abc'],'a')  # two strings starting with 'a'.
-    Traceback (most recent call last):
-    ... 
-    ValueError: ambiguous match for 'a'
+>>> from fuzzyparsers import fuzzy_match
+>>> fuzzy_match(['aab','bba','abc'],'aa')
+'aab'
+>>> fuzzy_match(['aab','bba','abc'],'a')  # two strings starting with 'a'.
+Traceback (most recent call last):
+... 
+ValueError: ambiguous match for 'a'
 
 The second parser parses dates in various formats and returns a datetime.date
 object.  Accepted formats include::
@@ -28,25 +28,25 @@ object.  Accepted formats include::
 
 For instance:
 
-    >>> from fuzzyparsers import parse_date
-    >>> parse_date('jun 17 2010') # my youngest son's birthday
-    datetime.date(2010, 6, 17)
+>>> from fuzzyparsers import parse_date
+>>> parse_date('nov 30 2012') # my youngest son's birthday
+datetime.date(2010, 6, 17)
 
 The library allows setting a default date to fill in specified components of a
 date (e.g. the year).  By default, a date with-out a year to will give the
 current year.
 
-    >>> from fuzzyparsers import DateParser
-    >>> import datetime
-    >>> DateParser(today=datetime.date(2013, 3, 1)).parse_date('feb 3')
-    datetime.date(2013, 2, 3)
+>>> from fuzzyparsers import DateParser
+>>> import datetime
+>>> DateParser(today=datetime.date(2013, 3, 1)).parse_date('feb 3')
+datetime.date(2013, 2, 3)
 
 TODO
 ----
 
 We'd like to support the following features:
 
-* Parsing time strings like "10 am" and "2 3 pm"
+* Parsing time strings like "10 am" and "3 pm"
 * A "[0-9]*.[0-9]*" with the first hunk a month and the second hunk a day
   should return the month/day combination which is nearest.  For example,
   "12-3" would return december 3 of this year or last year.
@@ -72,7 +72,7 @@ the MIT license.
 
 Use the following commands to run the extensive doc-tests::
 
-    python -m doctest fuzzyparsers/*.py
+    py.test fuzzyparsers --doctest-module
     python -m doctest README.txt
 
 To install fuzzyparsers, do the normal python thing (probably as root)::
