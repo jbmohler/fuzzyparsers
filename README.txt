@@ -30,7 +30,7 @@ For instance:
 
 >>> from fuzzyparsers import parse_date
 >>> parse_date('nov 30 2012') # my youngest son's birthday
-datetime.date(2010, 6, 17)
+datetime.date(2012, 11, 30)
 
 The library allows setting a default date to fill in specified components of a
 date (e.g. the year).  By default, a date with-out a year to will give the
