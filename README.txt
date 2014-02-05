@@ -53,7 +53,7 @@ We'd like to support the following features:
 
 Changelog
 ---------
-* 0.8.1 - support Python 3
+* 0.9.0 - support Python 3
 * 0.8.0 - switch to MIT license because I couldn't figure out why I cared about
   GPL for this package.
 * 0.7.3 - locale month-day order issues fixed (thanks to Treeve for getting

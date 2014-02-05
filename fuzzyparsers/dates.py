@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#  Copyright (C) 2010-12, Joel B. Mohler <joel@kiwistrawberry.us>
+###########################################################
+#  Copyright (C) Joel B. Mohler <joel@kiwistrawberry.us>
 #
-#  Distributed under the terms of the MIT license
-##############################################################################
+#  Distributed under the terms of The MIT License
+###########################################################
 """
 Date and string matching functions.
 """
