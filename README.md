@@ -1,5 +1,4 @@
-Introduction and Examples
--------------------------
+## Introduction and Examples
 
 The fuzzyparsers library provides a small collection of functions to sanitize
 free form user input.  For the moment its chief value is the flexible date
@@ -9,6 +8,7 @@ The library has two main parsers.  The first is a prefix parser which compares
 a string to a list of strings and returns the unique element of the list which
 matches the prefix.  An exception is thrown if the match is not unique.
 
+```python
 >>> from fuzzyparsers import fuzzy_match
 >>> fuzzy_match(['aab','bba','abc'],'aa')
 'aab'
@@ -16,6 +16,7 @@ matches the prefix.  An exception is thrown if the match is not unique.
 Traceback (most recent call last):
 ... 
 ValueError: ambiguous match for 'a'
+```
 
 The second parser parses dates in various formats and returns a datetime.date
 object.  Accepted formats include::
@@ -28,21 +29,24 @@ object.  Accepted formats include::
 
 For instance:
 
+```python
 >>> from fuzzyparsers import parse_date
 >>> parse_date('nov 30 2012') # my youngest son's birthday
 datetime.date(2012, 11, 30)
+```
 
 The library allows setting a default date to fill in specified components of a
 date (e.g. the year).  By default, a date with-out a year to will give the
 current year.
 
+```python
 >>> from fuzzyparsers import DateParser
 >>> import datetime
 >>> DateParser(today=datetime.date(2013, 3, 1)).parse_date('feb 3')
 datetime.date(2013, 2, 3)
+```
 
-TODO
-----
+## TODO
 
 We'd like to support the following features:
 
@@ -51,8 +55,8 @@ We'd like to support the following features:
   should return the month/day combination which is nearest.  For example,
   "12-3" would return december 3 of this year or last year.
 
-Changelog
----------
+## Changelog
+
 * 0.9.0 - support Python 3
 * 0.8.0 - switch to MIT license because I couldn't figure out why I cared about
   GPL for this package.
@@ -64,8 +68,7 @@ Changelog
   relative to the current date)
 * 0.6.x - initial public release and series of doc/install corrections
 
-Installation
-------------
+## Installation
 
 Fuzzyparsers is written by Joel B. Mohler and distributed under the terms of
 the MIT license.

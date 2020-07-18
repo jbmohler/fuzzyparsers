@@ -6,14 +6,8 @@
 #  Distributed under the terms of The MIT License
 ###########################################################
 
-try:
-    from setuptools import setup
-except ImportError:
-    from ez_setup import use_setuptools
-    use_setuptools()
-    from setuptools import setup
-
 import os
+from setuptools import setup
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
@@ -24,7 +18,7 @@ setup(name='fuzzyparsers',
     license='MIT',
     author='Joel B. Mohler',
     author_email='joel@kiwistrawberry.us',
-    long_description=read('README.txt'),
+    long_description=read('README.md'),
     url='https://bitbucket.org/jbmohler/fuzzyparsers',
     packages=['fuzzyparsers'],
     classifiers = [

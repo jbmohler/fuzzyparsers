@@ -1,7 +1,5 @@
-syntax: glob
-
-re:^build
-re:^dist
+build
+dist
 *.egg-info
 *.pyc
 
