@@ -19,7 +19,7 @@ ValueError: ambiguous match for 'a'
 ```
 
 The second parser parses dates in various formats and returns a datetime.date
-object.  Accepted formats include::
+object.  Accepted formats include:
 
     jan 12, 2003
     jan 5
@@ -74,15 +74,15 @@ We'd like to support the following features:
 Fuzzyparsers is written by Joel B. Mohler and distributed under the terms of
 the MIT license.
 
-Use the following commands to run the extensive doc-tests::
+Use the following commands to run the extensive doc-tests:
 
     py.test fuzzyparsers --doctest-module
     python -m doctest README.txt
 
-To install fuzzyparsers, do the normal python thing (probably as root)::
+To install fuzzyparsers, do the normal python thing (probably as root):
 
     python setup.py install
 
-or::
+or:
 
     pip install fuzzyparsers
