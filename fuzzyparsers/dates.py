@@ -190,7 +190,7 @@ class DateParser:
             if m:
                 return None,int(m.group(2)),int(m.group(1))
          
-        m = re.match("(-|\+)([0-9]+)",s)
+        m = re.match(r"(-|\+)([0-9]+)",s)
         if m:
             if m.group(1)=='+':
                 d = self.today + datetime.timedelta(int(m.group(2)))

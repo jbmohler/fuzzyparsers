@@ -57,6 +57,7 @@ We'd like to support the following features:
 
 ## Changelog
 
+* 0.9.5 - update revision control to git(hub) and minor regex fix
 * 0.9.0 - support Python 3
 * 0.8.0 - switch to MIT license because I couldn't figure out why I cared about
   GPL for this package.
